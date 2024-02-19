@@ -1,0 +1,9 @@
+#PBS -N yolov8_inference
+#PBS -q testegpu
+#PBS -m abe
+#PBS -e yolo_v8_inference_errors 
+#PBS -o yolo_v8_inference_output
+
+source ~/research/white-mold-applications/wm-model-yolo-v8/venv-wm-model-yolo-v8/bin/activate
+module load cuda/11.5.0-intel-2022.0.1
+python ~/research/white-mold-applications/wm-model-yolo-v8/my-python-modules/manage_yolo_v8_inference.py
