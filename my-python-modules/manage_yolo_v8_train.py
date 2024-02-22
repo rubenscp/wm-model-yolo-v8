@@ -24,11 +24,11 @@ import torch
 
 # # these are the helper libraries imported.
 # from engine import train_one_epoch, evaluate
-import utils
 
-# Importing python modules
+# Import python code from White Mold Project 
+import utils
 from manage_log import *
-# from train import * 
+from tasks import Tasks
 
 # ###########################################
 # Constants
@@ -52,53 +52,90 @@ def main():
 
     """
 
+    # creating Tasks object 
+    processing_tasks = Tasks()
+
     # setting dictionary initial parameters for processing
     full_path_project = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8'
 
     # getting application parameters 
+    processing_tasks.start_task('Getting application parameters')
     parameters_filename = 'wm_model_yolo_v8_parameters.json'
     parameters = get_parameters(full_path_project, parameters_filename)
+    processing_tasks.finish_task('Getting application parameters')
 
     # setting new values of parameters according of initial parameters
+    processing_tasks.start_task('Setting input image folders')
     set_input_image_folders(parameters)
+    processing_tasks.finish_task('Setting input image folders')
 
     # getting last running id
-    get_running_id(parameters)
+    processing_tasks.start_task('Getting running id')
+    running_id = get_running_id(parameters)
+    processing_tasks.finish_task('Getting running id')
 
     # setting output folder results
+    processing_tasks.start_task('Setting result folders')
     set_results_folder(parameters)
+    processing_tasks.finish_task('Setting result folders')
     
     # creating log file 
+    processing_tasks.start_task('Creating log file')
     logging_create_log(
-        parameters['training_results']['log_folder'], parameters['training_results']['log_filename'])
+        parameters['training_results']['log_folder'], parameters['training_results']['log_filename']
+    )
+    processing_tasks.finish_task('Creating log file')
     
     logging_info('White Mold Research')
     logging_info('Training the model YOLO v8' + LINE_FEED)
 
-    # getting device CUDA
-    device = get_device(parameters)
-    
-    # creating new instance of parameters file related to current running
-    save_processing_parameters(parameters_filename, parameters)
+    logging_info(f'')
+    logging_info(f'>> Set input image folders')
+    logging_info(f'')
+    logging_info(f'>> Get running id')
+    logging_info(f'running id: {str(running_id)}')   
+    logging_info(f'')
+    logging_info(f'>> Set result folders')
 
-    # loading dataloaders of image dataset for processing
-    # train_dataloader, valid_dataloader, test_dataloader = get_dataloaders(parameters)
-    
+    # getting device CUDA
+    processing_tasks.start_task('Getting device CUDA')
+    device = get_device(parameters)
+    processing_tasks.finish_task('Getting device CUDA')
+
+    # creating new instance of parameters file related to current running
+    processing_tasks.start_task('Saving processing parameters')
+    save_processing_parameters(parameters_filename, parameters)
+    processing_tasks.finish_task('Saving processing parameters')
+
     # creating neural network model 
+    processing_tasks.start_task('Creating neural network model')
     model = get_neural_network_model(parameters, device)
+    processing_tasks.finish_task('Creating neural network model')
 
     # training neural netowrk model
-    # train_yolo_v8_model(parameters, device, model, train_dataloader, valid_dataloader)
-    train_yolo_v8_model(parameters, device, model)
+    processing_tasks.start_task('Training neural netowrk model')
+    model = train_yolo_v8_model(parameters, device, model)
+    processing_tasks.finish_task('Training neural netowrk model')
 
     # saving the best weights file 
+    processing_tasks.start_task('Saving best weights')
     save_best_weights(parameters)
+    processing_tasks.finish_task('Saving best weights')
+
+    # validating model 
+    processing_tasks.start_task('Validating model')
+    model = validate_yolo_v8_model(parameters, model)
+    processing_tasks.finish_task('Validating model')
     
     # printing metrics results
     
     # finishing model training 
     logging_info('')
     logging_info('Finished the training of the model YOLOv8 ' + LINE_FEED)
+
+    # printing tasks summary 
+    processing_tasks.finish_processing()
+    logging_info(processing_tasks.to_string())
 
 
 # ###########################################
@@ -112,16 +149,6 @@ def get_parameters(full_path_project, parameters_filename):
     # getting parameters 
     path_and_parameters_filename = os.path.join(full_path_project, parameters_filename)
     parameters = Utils.read_json_parameters(path_and_parameters_filename)
-
-
-    # logging processing parameters 
-    # logging_info(Utils.get_pretty_json(parameters) + LINE_FEED)   
-    
-    # saving current processing parameters in the log folder 
-    # path_and_parameters_filename = os.path.join('log', log_filename + "-" + parameters_filename)
-    # Utils.save_text_file(path_and_parameters_filename, \
-    #                     Utils.get_pretty_json(parameters), 
-    #                     NEW_FILE)
 
     # returning parameters 
     return parameters
@@ -181,7 +208,7 @@ def get_running_id(parameters):
     parameters['processing']['running_id'] = running_id
 
     # returning the current running id
-    # return running_id
+    return running_id
 
 def set_results_folder(parameters):
     '''
@@ -305,17 +332,6 @@ def save_processing_parameters(parameters_filename, parameters):
                         Utils.get_pretty_json(parameters), 
                         NEW_FILE)
 
-# def get_dataloaders(parameters):
-#     '''
-#     Get dataloaders of training, validation and testing from image dataset 
-#     '''
-#     # getting dataloaders from faster rcnn dataset 
-#     train_dataloader, valid_dataloader = get_dataloaders_faster_rcnn(parameters)
-#     test_dataloader = None
-
-#     # returning dataloaders from datasets for processing 
-#     return train_dataloader, valid_dataloader, test_dataloader 
-
 def get_neural_network_model(parameters, device):
     '''
     Get neural network model
@@ -341,7 +357,6 @@ def get_neural_network_model(parameters, device):
     # returning neural network model
     return model
 
-# def train_yolo_v8_model(parameters, device, model, train_dataloader, valid_dataloader):
 def train_yolo_v8_model(parameters, device, model):
     '''
     Execute training of the neural network model
@@ -362,7 +377,11 @@ def train_yolo_v8_model(parameters, device, model):
                           project=parameters['training_results']['results_folder'],
                           )
 
-    logging_info(f'Training model finished')
+    logging_info(f'results: {results}')
+    logging_info(f'Training of the model finished')
+
+    # returing trained model
+    return model 
 
 
 def save_best_weights(parameters):
@@ -379,6 +398,36 @@ def save_best_weights(parameters):
 
     # copying weights file to be used in the inference step 
     Utils.copy_file(input_filename, input_path, output_filename, output_path)
+
+def validate_yolo_v8_model(parameters, model):
+    '''
+    Execute validation in the model previously trained
+    '''
+
+    logging_info(f'')
+    logging_info(f'>> Validating model')   
+
+    # Train the model using the 'coco128.yaml' dataset for 3 epochs
+    data_file_yaml = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml'    
+    metrics = model.val(data=data_file_yaml, 
+                        verbose=True, 
+                        show=True,
+                        imgsz=parameters['input']['input_dataset']['input_image_size'],
+                        device=[0],
+                        project=parameters['training_results']['results_folder'],
+                        )
+
+    # metrics = model.val(save_json=True, save_hybrid=True) 
+    logging_info(f'metrics: {metrics}')
+    # logging_info(f'box.map: {metrics.box.map}')
+    # logging_info(f'box.map50: {metrics.box.map50}')
+    # logging_info(f'box.map75: {metrics.box.map75}')
+    # logging_info(f'box.maps: {metrics.box.maps}')
+    
+    logging_info(f'Validating of the model finished')
+    
+    # returing trained model
+    return model
 
 
 # ###########################################

@@ -1,5 +1,5 @@
 White Mold Yaml Setup:
-path: /home/lovelace/proj/proj939/rubenscp/research/white-mold-dataset/results-pre-processed-images/running-0111-03ds/splitting_by_images/2-output-dataset/yolov8/300x300
+path: /home/lovelace/proj/proj939/rubenscp/research/white-mold-dataset/results-pre-processed-images/running-0113-15ds/splitting_by_images/2-output-dataset/yolov8/300x300
 
 train: train/images
 val: valid/images
@@ -8,5 +8,3 @@ test: test/images
 # class names
 nc: 5
 names: ['__background__', 'Apothecium', 'Imature Sclerotium', 'Mature Sclerotium', 'White Mold']
-
-# save_dir: /home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/runs/detect/train-results
