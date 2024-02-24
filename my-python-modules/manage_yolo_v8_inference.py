@@ -23,13 +23,13 @@ from IPython.display import display, Image
 # torchvision libraries
 import torch
 
-# # these are the helper libraries imported.
-# from engine import train_one_epoch, evaluate
+# these are the helper libraries imported.
 import utils
 
 # Importing python modules
 from manage_log import *
-# from train import * 
+from tasks import Tasks
+from entity.AnnotationsStatistic import AnnotationsStatistic
 
 # ###########################################
 # Constants
@@ -50,58 +50,98 @@ def main():
     Main method that perform inference of the neural network model.
 
     All values of the parameters used here are defined in the external file "wm_model_faster_rcnn_parameters.json".
-
+    
     """
+ 
+    # creating Tasks object 
+    processing_tasks = Tasks()
 
     # setting dictionary initial parameters for processing
     full_path_project = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8'
 
     # getting application parameters 
+    processing_tasks.start_task('Getting application parameters')
     parameters_filename = 'wm_model_yolo_v8_parameters.json'
     parameters = get_parameters(full_path_project, parameters_filename)
+    processing_tasks.finish_task('Getting application parameters')
 
     # setting new values of parameters according of initial parameters
+    processing_tasks.start_task('Setting input image folders')
     set_input_image_folders(parameters)
+    processing_tasks.finish_task('Setting input image folders')
 
     # getting last running id
-    get_running_id(parameters)
+    processing_tasks.start_task('Getting running id')
+    running_id = get_running_id(parameters)
+    processing_tasks.finish_task('Getting running id')
 
     # setting output folder results
-    set_results_folder(parameters)
+    processing_tasks.start_task('Setting result folders')
+    set_result_folders(parameters)
+    processing_tasks.finish_task('Setting result folders')
     
     # creating log file 
+    processing_tasks.start_task('Creating log file')
     logging_create_log(
         parameters['inference_results']['log_folder'], 
         parameters['inference_results']['log_filename']
     )
+    processing_tasks.finish_task('Creating log file')
 
     logging_info('White Mold Research')
     logging_info('Inference of the model YOLO v8' + LINE_FEED)
 
-    # getting device CUDA
-    device = get_device(parameters)
+    logging_info(f'')
+    logging_info(f'>> Set input image folders')
+    logging_info(f'')
+    logging_info(f'>> Get running id')
+    logging_info(f'running id: {str(running_id)}')   
+    logging_info(f'')
+    logging_info(f'>> Set result folders')
 
+    # getting device CUDA
+    processing_tasks.start_task('Getting device CUDA')
+    device = get_device(parameters)
+    processing_tasks.finish_task('Getting device CUDA')
+    
     # creating new instance of parameters file related to current running
+    processing_tasks.start_task('Saving processing parameters')
     save_processing_parameters(parameters_filename, parameters)
+    processing_tasks.finish_task('Saving processing parameters')
 
     # copying weights file produced by training step 
+    processing_tasks.start_task('Copying weights file used in inference')
     copy_weights_file(parameters)
+    processing_tasks.finish_task('Copying weights file used in inference')
 
     # creating neural network model 
+    processing_tasks.start_task('Creating neural network model')
     model = get_neural_network_model(parameters, device)
+    processing_tasks.finish_task('Creating neural network model')
 
-    # get number of images for inference 
-    # show_number_of_images_for_inference(parameters)
+    # getting statistics of input dataset 
+    processing_tasks.start_task('Getting statistics of input dataset')
+    annotation_statistics = get_input_dataset_statistics(parameters)
+    show_input_dataset_statistics(annotation_statistics)
+    processing_tasks.finish_task('Getting statistics of input dataset')    
 
     # inference the neural netowrk model
+    processing_tasks.start_task('Running inference of test images dataset')
     inference_neural_network_model(parameters, device, model)
+    processing_tasks.finish_task('Running inference of test images dataset')
+
+    # showing input dataset statistics
+    show_input_dataset_statistics(annotation_statistics)
 
     # printing metrics results 
    
-
     # finishing model training 
     logging_info('')
     logging_info('Finished the inference of the model YOLO v8' + LINE_FEED)
+
+    # printing tasks summary 
+    processing_tasks.finish_processing()
+    logging_info(processing_tasks.to_string())
 
 
 # ###########################################
@@ -174,7 +214,7 @@ def get_running_id(parameters):
     # returning the current running id
     # return running_id
 
-def set_results_folder(parameters):
+def set_result_folders(parameters):
     '''
     Set folder name of output results
     '''
@@ -330,6 +370,18 @@ def get_neural_network_model(parameters, device):
 
     # returning neural network model
     return model
+
+# getting statistics of input dataset 
+def get_input_dataset_statistics(parameters):
+    
+    annotation_statistics = AnnotationsStatistic()
+    annotation_statistics.processing_statistics(parameters)
+    return annotation_statistics
+    
+def show_input_dataset_statistics(annotation_statistics):
+
+    logging_info(f'Input dataset statistic')
+    logging_info(annotation_statistics.to_string())
 
 # def show_number_of_images_for_inference(parameters):
 
