@@ -30,6 +30,7 @@ import utils
 from manage_log import *
 from tasks import Tasks
 from entity.AnnotationsStatistic import AnnotationsStatistic
+from create_yaml_file import * 
 
 # ###########################################
 # Constants
@@ -98,6 +99,11 @@ def main():
     logging_info(f'')
     logging_info(f'>> Set result folders')
 
+    # creating yaml file with parameters used by Ultralytics
+    processing_tasks.start_task('Creating yaml file for ultralytics')
+    create_yaml_file_for_ultralytics(parameters)
+    processing_tasks.finish_task('Creating yaml file for ultralytics')
+
     # getting device CUDA
     processing_tasks.start_task('Getting device CUDA')
     device = get_device(parameters)
@@ -134,6 +140,9 @@ def main():
     model = validate_yolo_v8_model(parameters, model)
     processing_tasks.finish_task('Validating model')
     
+    # showing input dataset statistics
+    show_input_dataset_statistics(annotation_statistics)
+
     # printing metrics results
     
     # finishing model training 
@@ -307,7 +316,25 @@ def set_results_folder(parameters):
         parameters['neural_network_model']['model_folder'],
     )
     parameters['neural_network_model']['model_folder'] = model_folder
+    
+def create_yaml_file_for_ultralytics(parameters):
 
+    # preparing parameters 
+    yolo_v8_yaml_filename = parameters['processing']['yolo_v8_yaml_filename']
+    path_and_filename_white_mold_yaml = os.path.join(
+        parameters['processing']['research_root_folder'],
+        parameters['processing']['project_name_folder'],
+        yolo_v8_yaml_filename
+    )
+    image_dataset_folder = parameters['processing']['image_dataset_folder']
+    classes = (parameters['neural_network_model']['classes'])[:5]
+    
+    # creating yaml file 
+    create_project_yaml_file(
+        path_and_filename_white_mold_yaml,
+        image_dataset_folder,
+        classes,    
+    )
 
 def get_device(parameters):
     '''
@@ -385,7 +412,12 @@ def train_yolo_v8_model(parameters, device, model):
     logging_info(f'>> Training model')   
 
     # Train the model using the 'coco128.yaml' dataset for 3 epochs
-    data_file_yaml = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml'
+    # data_file_yaml = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml'
+    data_file_yaml = os.path.join(
+        parameters['processing']['research_root_folder'],
+        parameters['processing']['project_name_folder'],
+        parameters['processing']['yolo_v8_yaml_filename']
+    )
     results = model.train(data=data_file_yaml, 
                           epochs=parameters['neural_network_model']['number_epochs'],
                           verbose=True, 
@@ -426,7 +458,12 @@ def validate_yolo_v8_model(parameters, model):
     logging_info(f'>> Validating model')   
 
     # Train the model using the 'coco128.yaml' dataset for 3 epochs
-    data_file_yaml = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml'    
+    # data_file_yaml = '/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml'    
+    data_file_yaml = os.path.join(
+        parameters['processing']['research_root_folder'],
+        parameters['processing']['project_name_folder'],
+        parameters['processing']['yolo_v8_yaml_filename']
+    )
     metrics = model.val(data=data_file_yaml, 
                         verbose=True, 
                         show=True,
@@ -447,13 +484,9 @@ def validate_yolo_v8_model(parameters, model):
     # returing trained model
     return model
 
-
-
-
 # ###########################################
 # Methods of Level 3
 # ###########################################
-
 
 # ###########################################
 # Main method

@@ -1,5 +1,6 @@
 #PBS -N yolov8_train
-#PBS -q testegpu
+#PBS -q umagpu
+
 #PBS -m abe
 #PBS -e yolo_v8_train_errors 
 #PBS -o yolo_v8_train_output

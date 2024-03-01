@@ -3,7 +3,7 @@
         "input_dataset": {
             "input_image_size": 300,
             "annotation_format": "yolov8",
-            "input_dataset_path": "white-mold-dataset/results-pre-processed-images/running-0113-15ds/splitting_by_images/2-output-dataset"
+            "input_dataset_path": "white-mold-dataset/results-pre-processed-images/running-0003-15ds/splitting_by_images/2-output-dataset"
         },
         "inference": {
             "weights_folder": "/home/lovelace/proj/proj939/rubenscp/research/white-mold-inference-weights",
@@ -45,7 +45,8 @@
         "image_dataset_folder": "defined during training/inference ",
         "image_dataset_folder_train": "defined during training/inference ",
         "image_dataset_folder_valid": "defined during training/inference ",
-        "image_dataset_folder_test": "defined during training/inference "
+        "image_dataset_folder_test": "defined during training/inference ",
+        "yolo_v8_yaml_filename": "white_mold_yolo_v8.yaml"
     },
     "training_results": {
         "main_folder": "white-mold-results",

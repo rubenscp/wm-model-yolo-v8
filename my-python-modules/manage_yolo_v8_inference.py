@@ -12,7 +12,6 @@ Version: 1.0
 This implementation is based on this notebook: https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/train-yolov8-object-detection-on-custom-dataset.ipynb?authuser=1
 """
 
-
 # Basic python and ML Libraries
 import os
 from datetime import datetime
@@ -30,6 +29,7 @@ import utils
 from manage_log import *
 from tasks import Tasks
 from entity.AnnotationsStatistic import AnnotationsStatistic
+# from create_yaml_file import * 
 
 # ###########################################
 # Constants
@@ -98,6 +98,11 @@ def main():
     logging_info(f'running id: {str(running_id)}')   
     logging_info(f'')
     logging_info(f'>> Set result folders')
+
+#    # creating yaml file with parameters used by Ultralytics
+#     processing_tasks.start_task('Creating yaml file for ultralytics')
+#     create_yaml_file_for_ultralytics(parameters)
+#     processing_tasks.finish_task('Creating yaml file for ultralytics')    
 
     # getting device CUDA
     processing_tasks.start_task('Getting device CUDA')
@@ -298,6 +303,25 @@ def set_result_folders(parameters):
     )
     parameters['inference_results']['results_folder'] = results_folder
     Utils.create_directory(results_folder)
+
+# def create_yaml_file_for_ultralytics(parameters):
+
+#     # preparing parameters 
+#     yolo_v8_yaml_filename = parameters['processing']['yolo_v8_yaml_filename']
+#     path_and_filename_white_mold_yaml = os.path.join(
+#         parameters['processing']['research_root_folder'],
+#         parameters['processing']['project_name_folder'],
+#         yolo_v8_yaml_filename
+#     )
+#     image_dataset_folder = parameters['processing']['image_dataset_folder']
+#     classes = (parameters['neural_network_model']['classes'])[:5]
+    
+#     # creating yaml file 
+#     create_project_yaml_file(
+#         path_and_filename_white_mold_yaml,
+#         image_dataset_folder,
+#         classes,    
+#     )
 
 def get_device(parameters):
     '''
