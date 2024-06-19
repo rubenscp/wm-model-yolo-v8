@@ -1,7 +1,10 @@
 numpy
 matplotlib
 pandas
+scikit-learn
 opencv-python
-ultralytics==8.0.20
+ultralytics
 lxml
 dict2xml
+seaborn
+openpyxl

@@ -1,0 +1,9 @@
+#PBS -N yolo_test
+#PBS -q testegpu
+#PBS -m abe
+#PBS -e yolo_test_errors 
+#PBS -o yolo_test_output
+
+source ~/research/white-mold-applications/wm-model-yolo-v8/venv-wm-model-yolo-v8/bin/activate
+module load cuda/11.5.0-intel-2022.0.1
+python ~/research/white-mold-applications/wm-model-yolo-v8/my-python-modules/manage_yolo_test.py

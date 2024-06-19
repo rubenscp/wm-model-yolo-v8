@@ -1,1 +1,135 @@
-creating path_and_filename_white_mold_yaml: /home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml
+Ultralytics YOLOv8.1.27 🚀 Python-3.10.10 torch-2.2.0+cu121 CUDA:0 (NVIDIA A100-PCIE-40GB MIG 4g.20gb, 19968MiB)
+[34m[1mengine/trainer: [0mtask=detect, mode=train, model=/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/yolo_models/yolov8s.pt, data=/home/lovelace/proj/proj939/rubenscp/research/white-mold-applications/wm-model-yolo-v8/white_mold_yolo_v8.yaml, epochs=20, time=None, patience=100, batch=16, imgsz=300, save=True, save_period=-1, cache=False, device=[0], workers=8, project=/home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results, name=train, exist_ok=False, pretrained=True, optimizer=auto, verbose=True, seed=0, deterministic=True, single_cls=False, rect=False, cos_lr=False, close_mosaic=10, resume=False, amp=True, fraction=1.0, profile=False, freeze=None, multi_scale=False, overlap_mask=True, mask_ratio=4, dropout=0.0, val=True, split=val, save_json=False, save_hybrid=False, conf=None, iou=0.7, max_det=300, half=False, dnn=False, plots=True, source=None, vid_stride=1, stream_buffer=False, visualize=False, augment=False, agnostic_nms=False, classes=None, retina_masks=False, embed=None, show=True, save_frames=False, save_txt=False, save_conf=False, save_crop=False, show_labels=True, show_conf=True, show_boxes=True, line_width=None, format=torchscript, keras=False, optimize=False, int8=False, dynamic=False, simplify=False, opset=None, workspace=4, nms=False, lr0=0.0005, lrf=0.0005, momentum=0.9, weight_decay=0.0005, warmup_epochs=3.0, warmup_momentum=0.8, warmup_bias_lr=0.1, box=7.5, cls=0.5, dfl=1.5, pose=12.0, kobj=1.0, label_smoothing=0.0, nbs=64, hsv_h=0.015, hsv_s=0.7, hsv_v=0.4, degrees=0.0, translate=0.1, scale=0.5, shear=0.0, perspective=0.0, flipud=0.0, fliplr=0.5, mosaic=1.0, mixup=0.0, copy_paste=0.0, auto_augment=randaugment, erasing=0.4, crop_fraction=1.0, cfg=None, tracker=botsort.yaml, save_dir=/home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train
+Overriding model.yaml nc=80 with nc=5
+
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       928  ultralytics.nn.modules.conv.Conv             [3, 32, 3, 2]                 
+  1                  -1  1     18560  ultralytics.nn.modules.conv.Conv             [32, 64, 3, 2]                
+  2                  -1  1     29056  ultralytics.nn.modules.block.C2f             [64, 64, 1, True]             
+  3                  -1  1     73984  ultralytics.nn.modules.conv.Conv             [64, 128, 3, 2]               
+  4                  -1  2    197632  ultralytics.nn.modules.block.C2f             [128, 128, 2, True]           
+  5                  -1  1    295424  ultralytics.nn.modules.conv.Conv             [128, 256, 3, 2]              
+  6                  -1  2    788480  ultralytics.nn.modules.block.C2f             [256, 256, 2, True]           
+  7                  -1  1   1180672  ultralytics.nn.modules.conv.Conv             [256, 512, 3, 2]              
+  8                  -1  1   1838080  ultralytics.nn.modules.block.C2f             [512, 512, 1, True]           
+  9                  -1  1    656896  ultralytics.nn.modules.block.SPPF            [512, 512, 5]                 
+ 10                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 11             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 12                  -1  1    591360  ultralytics.nn.modules.block.C2f             [768, 256, 1]                 
+ 13                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 14             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 15                  -1  1    148224  ultralytics.nn.modules.block.C2f             [384, 128, 1]                 
+ 16                  -1  1    147712  ultralytics.nn.modules.conv.Conv             [128, 128, 3, 2]              
+ 17            [-1, 12]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 18                  -1  1    493056  ultralytics.nn.modules.block.C2f             [384, 256, 1]                 
+ 19                  -1  1    590336  ultralytics.nn.modules.conv.Conv             [256, 256, 3, 2]              
+ 20             [-1, 9]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 21                  -1  1   1969152  ultralytics.nn.modules.block.C2f             [768, 512, 1]                 
+ 22        [15, 18, 21]  1   2117983  ultralytics.nn.modules.head.Detect           [5, [128, 256, 512]]          
+Model summary: 225 layers, 11137535 parameters, 11137519 gradients, 28.7 GFLOPs
+
+Transferred 349/355 items from pretrained weights
+[34m[1mTensorBoard: [0mStart with 'tensorboard --logdir /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train', view at http://localhost:6006/
+Freezing layer 'model.22.dfl.conv.weight'
+[34m[1mAMP: [0mrunning Automatic Mixed Precision (AMP) checks with YOLOv8n...
+[34m[1mAMP: [0mchecks passed ✅
+WARNING ⚠️ imgsz=[300] must be multiple of max stride 32, updating to [320]
+Plotting labels to /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train/labels.jpg... 
+[34m[1moptimizer:[0m 'optimizer=auto' found, ignoring 'lr0=0.0005' and 'momentum=0.9' and determining best 'optimizer', 'lr0' and 'momentum' automatically... 
+[34m[1moptimizer:[0m AdamW(lr=0.001111, momentum=0.9) with parameter groups 57 weight(decay=0.0), 64 weight(decay=0.0005), 63 bias(decay=0.0)
+[34m[1mTensorBoard: [0mmodel graph visualization added ✅
+Image sizes 320 train, 320 val
+Using 8 dataloader workers
+Logging results to [1m/home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train[0m
+Starting training for 20 epochs...
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.411      0.526      0.451      0.225
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.397      0.502      0.439      0.223
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.499      0.533      0.522      0.253
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.498       0.58      0.537      0.278
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.531      0.606      0.594      0.325
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.549      0.655      0.622      0.337
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194        0.6      0.629      0.617      0.342
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.628      0.657       0.68      0.371
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.676      0.683      0.688       0.38
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.614       0.65      0.673      0.388
+Closing dataloader mosaic
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.633      0.687      0.696      0.406
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.613      0.694      0.708      0.418
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.662        0.7      0.706      0.407
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.664      0.711      0.719      0.423
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.656      0.717      0.711      0.435
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.691      0.719      0.734      0.447
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.693      0.746      0.748      0.456
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.707       0.75       0.76      0.462
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.731      0.733      0.757      0.463
+
+      Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+                   all       2194       2194      0.725      0.759      0.769      0.473
+
+20 epochs completed in 0.218 hours.
+Optimizer stripped from /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train/weights/last.pt, 22.5MB
+Optimizer stripped from /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train/weights/best.pt, 22.5MB
+
+Validating /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train/weights/best.pt...
+Ultralytics YOLOv8.1.27 🚀 Python-3.10.10 torch-2.2.0+cu121 CUDA:0 (NVIDIA A100-PCIE-40GB MIG 4g.20gb, 19968MiB)
+Model summary (fused): 168 layers, 11127519 parameters, 0 gradients, 28.4 GFLOPs
+                   all       2194       2194      0.725      0.758      0.769      0.473
+            Apothecium       2194        186      0.937      0.914      0.968      0.715
+    Imature Sclerotium       2194        456      0.657      0.783      0.733      0.429
+     Mature Sclerotium       2194        934      0.783      0.755      0.836      0.492
+            White Mold       2194        618      0.524      0.583       0.54      0.255
+Speed: 0.0ms preprocess, 0.4ms inference, 0.0ms loss, 0.8ms postprocess per image
+Results saved to [1m/home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train[0m
+WARNING ⚠️ imgsz=[300] must be multiple of max stride 32, updating to [320]
+Ultralytics YOLOv8.1.27 🚀 Python-3.10.10 torch-2.2.0+cu121 CUDA:0 (NVIDIA A100-PCIE-40GB MIG 4g.20gb, 19968MiB)
+Model summary (fused): 168 layers, 11127519 parameters, 0 gradients, 28.4 GFLOPs
+                   all       2194       2194      0.724      0.761      0.769      0.473
+            Apothecium       2194        186      0.936      0.914      0.968      0.715
+    Imature Sclerotium       2194        456      0.659      0.787      0.733      0.429
+     Mature Sclerotium       2194        934       0.78      0.756      0.836      0.493
+            White Mold       2194        618       0.52      0.587       0.54      0.255
+Speed: 0.0ms preprocess, 0.8ms inference, 0.0ms loss, 0.8ms postprocess per image
+Results saved to [1m/home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/results/train2[0m
+path_and_filename: /home/lovelace/proj/proj939/rubenscp/research/white-mold-results/yolov8s.pt/training/running-0086-300x300/metrics/yolov8s.pt_train_loss.png
+values: [1.9222, 1.9182, 1.9012, 1.8488, 1.7888, 1.779, 1.7349, 1.7114, 1.6805, 1.664, 1.661, 1.6227, 1.5931, 1.5756, 1.5429, 1.5182, 1.4999, 1.4756, 1.4507, 1.4345]
+title: Training Loss for model yolov8s.pt
+x_label: Epochs
+y_label: Train Loss
