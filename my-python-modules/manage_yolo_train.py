@@ -395,6 +395,7 @@ def get_neural_network_model(parameters, device):
     > wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8s.pt
     > wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt
 
+    3) Be carefull with the folder and fil epermissions to use the pretrained models file 
 
     '''      
     
@@ -407,10 +408,13 @@ def get_neural_network_model(parameters, device):
         parameters['processing']['project_name_folder'],
         parameters['neural_network_model']['model_folder'],
         parameters['neural_network_model']['model_name']
-    )
-    
-    logging_info(f'Model used: {path_and_yolo_model_filename}')
+    )    
+    # path_and_yolo_model_filename = '/home/lovelace/proj/proj939/rubenscp/research/yolov10s.pt'
+    logging_info(f"Model name  : {parameters['neural_network_model']['model_name']}")
+    logging_info(f"Model folder: {parameters['neural_network_model']['model_folder']}")
+    logging_info(f'Model used  : {path_and_yolo_model_filename}')
 
+    # ATTENTION: Be carefull with the folder and fil epermissions to use the pretrained models file 
     model = YOLO(path_and_yolo_model_filename)
 
     logging.info(f'{model}')

@@ -33,7 +33,8 @@ def create_project_yaml_file_for_train_valid(
 def create_project_yaml_file_for_test(
     path_and_filename_white_mold_yaml,
     image_dataset_folder,
-    classes):
+    classes, 
+    input_dataset_type):
 
     # removing yaml file, if exists 
     Utils.remove_file(path_and_filename_white_mold_yaml)
@@ -43,8 +44,8 @@ def create_project_yaml_file_for_test(
     lines += 'White Mold Yaml Setup:' + LINE_FEED + LINE_FEED
     lines += 'path: ' + image_dataset_folder + LINE_FEED + LINE_FEED
     lines += 'train: train/images' + LINE_FEED
-    lines += 'val: test/images' + LINE_FEED
-    lines += 'test: test/images' + LINE_FEED
+    lines += 'val: ' + input_dataset_type + '/images' + LINE_FEED
+    lines += 'test: ' + input_dataset_type + '/images' + LINE_FEED
     lines += LINE_FEED
     lines += '# class names' + LINE_FEED
     lines += 'nc: ' + str(len(classes)) + LINE_FEED

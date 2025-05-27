@@ -138,8 +138,16 @@ def main():
     # inference the neural netowrk model
     processing_tasks.start_task('Running prediction on the test images dataset')
     test_neural_network_model(parameters, device, model)
+    ########## 10-05-2025 - Utilizar somente o método "predict" do Ultralytics para avaliar performance
     test_neural_network_model_ultralytics(parameters, device, model)
     processing_tasks.finish_task('Running prediction on the test images dataset')
+
+    logging_info('Hyperparamters used in this running:')
+    logging_info('threshold:                    ' + str(parameters['neural_network_model']['threshold']))
+    logging_info('iou_threshold_for_prediction: ' + str(parameters['neural_network_model']['iou_threshold_for_prediction']))
+    logging_info('iou_threshold_for_validation: ' + str(parameters['neural_network_model']['iou_threshold_for_validation']))
+    logging_info('non_maximum_suppression:      ' + str(parameters['neural_network_model']['non_maximum_suppression']))
+    logging_info(' ')  
 
     # showing input dataset statistics
     # if parameters['processing']['show_statistics_of_input_dataset']:
@@ -339,12 +347,14 @@ def create_yaml_file_for_ultralytics(parameters):
     image_dataset_folder = parameters['processing']['image_dataset_folder']
     number_of_classes = parameters['neural_network_model']['number_of_classes']
     classes = (parameters['neural_network_model']['classes'])[:(number_of_classes+1)]
+    input_dataset_type = parameters['input']['input_dataset']['input_dataset_type']
    
     # creating yaml file 
     create_project_yaml_file_for_test(
         path_and_filename_white_mold_yaml,
         image_dataset_folder,
-        classes,    
+        classes, 
+        input_dataset_type,   
     )
 
 def get_device(parameters):
@@ -425,7 +435,9 @@ def get_input_dataset_statistics(parameters):
     
     annotation_statistics = AnnotationsStatistic()
     # steps = ['train', 'valid', 'test'] 
-    steps = ['test'] 
+    # steps = ['test'] 
+    steps = [parameters['input']['input_dataset']['input_dataset_type']]
+
     annotation_statistics.processing_statistics(parameters, steps)
     return annotation_statistics
 
@@ -463,12 +475,17 @@ def test_neural_network_model(parameters, device, model):
     classes =  parameters['neural_network_model']['classes']
 
     # Run batched inference on a list of images   
+    if parameters['input']['input_dataset']['input_dataset_type'] == 'valid':
+        image_dataset_folder = parameters['processing']['image_dataset_folder_valid']
+    if parameters['input']['input_dataset']['input_dataset_type'] == 'test':
+        image_dataset_folder = parameters['processing']['image_dataset_folder_test'] 
+
     image_dataset_folder_test_images = os.path.join(
-        parameters['processing']['image_dataset_folder_test'],
+        image_dataset_folder, 
         'images',
     )
     image_dataset_folder_test_labels = os.path.join(
-        parameters['processing']['image_dataset_folder_test'],
+        image_dataset_folder, 
         'labels',
     )
     logging_info(f'Test image dataset folder: {image_dataset_folder_test_images}')
@@ -496,7 +513,7 @@ def test_neural_network_model(parameters, device, model):
         number_of_classes=parameters['neural_network_model']['number_of_classes'],
     )
 
-    # logging_info(f'len test_image #{len(test_images_with_path)}')
+    logging_info(f'len test_image #{len(test_images_with_path)}')
 
     count = 0    
     for test_image in test_images_with_path:
@@ -848,13 +865,18 @@ def test_neural_network_model_ultralytics(parameters, device, model):
     # getting classes 
     classes =  parameters['neural_network_model']['classes']
 
-    # Run batched inference on a list of images   
+    # Run batched inference on a list of images 
+    if parameters['input']['input_dataset']['input_dataset_type'] == 'valid':
+        image_dataset_folder = parameters['processing']['image_dataset_folder_valid']
+    if parameters['input']['input_dataset']['input_dataset_type'] == 'test':
+        image_dataset_folder = parameters['processing']['image_dataset_folder_test'] 
+  
     image_dataset_folder_test_images = os.path.join(
-        parameters['processing']['image_dataset_folder_test'],
+        image_dataset_folder,
         'images',
     )
     image_dataset_folder_test_labels = os.path.join(
-        parameters['processing']['image_dataset_folder_test'],
+        image_dataset_folder,
         'labels',
     )
     logging_info(f'Test image dataset folder: {image_dataset_folder_test_images}')
